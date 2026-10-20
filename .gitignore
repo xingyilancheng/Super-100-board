@@ -1,0 +1,20 @@
+node_modules/
+dist/*
+!dist/百数板乐园-1.0.0-x64.exe
+!dist/百数板乐园-安装包-1.0.0.exe
+dist-issuer/
+*.blockmap
+发卡上架清单.md
+npm-debug.log*
+.DS_Store
+Thumbs.db
+*.log
+
+# 发码工具与私钥（仅卖家本机使用，不随代码分发）
+tools/license-private-key.pem
+tools/license-issue.cjs
+tools/build-issuer.cjs
+tools/sea-config.json
+tools/sea-prep.blob
+tools/issuer-gui/
+tools/noop-sign.cjs

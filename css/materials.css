@@ -1,0 +1,156 @@
+/* ===========================================================
+   棋盘材质：实木 / 亚克力 / 马卡龙 / 星空
+   所有方块共用 .tile-look，尺寸单位用 em 以便飞行残影等比缩放
+   =========================================================== */
+.tile-look {
+  display: grid;
+  place-items: center;
+  position: relative;
+  border-radius: .42em;
+  font-family: var(--num-font);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- ① 实木 ---------- */
+body[data-material="wood"] { --blank-ink: rgba(255, 255, 255, .82); }
+body[data-material="wood"] .board-frame {
+  background:
+    repeating-linear-gradient(114deg, rgba(122, 76, 36, .10) 0 .35cqw, rgba(255, 240, 210, 0) .35cqw 1.7cqw),
+    repeating-linear-gradient(107deg, rgba(96, 58, 24, .07) 0 .9cqw, rgba(255, 236, 200, .05) .9cqw 2.9cqw),
+    linear-gradient(160deg, #dfb079 0%, #c88f52 48%, #b67a3f 100%);
+  border: .95cqw solid #a8672f;
+  box-shadow:
+    0 1.9cqw 3.6cqw rgba(110, 70, 30, .34),
+    inset 0 0 0 .28cqw rgba(255, 226, 180, .4),
+    inset 0 1.2cqw 2.2cqw rgba(255, 228, 185, .35),
+    inset 0 -1cqw 2cqw rgba(120, 70, 25, .25);
+}
+body[data-material="wood"] .board-tag { color: #8d5a28; background: rgba(255, 245, 228, .9); }
+body[data-material="wood"] .tile-look {
+  background: linear-gradient(180deg, #fffdf6 0%, #fff1d8 62%, #ffe7c2 100%);
+  border: .07em solid rgba(160, 108, 56, .32);
+  color: #7b4a1c;
+  box-shadow:
+    inset 0 .09em 0 rgba(255, 255, 255, .95),
+    0 .14em 0 rgba(150, 100, 52, .34),
+    0 .24em .34em rgba(120, 80, 40, .18);
+}
+body[data-material="wood"] .cell.blank {
+  background:
+    repeating-linear-gradient(114deg, rgba(120, 72, 30, .16) 0 .3cqw, rgba(255, 240, 210, 0) .3cqw 1.5cqw),
+    rgba(120, 74, 32, .18);
+  border: .28cqw dashed rgba(255, 235, 200, .62);
+  color: var(--blank-ink);
+  box-shadow: inset 0 .3em .6em rgba(90, 50, 15, .28);
+}
+body[data-material="wood"] .cell.filled::before { color: #d59343; }
+
+/* ---------- ② 亚克力 ---------- */
+body[data-material="acrylic"] { --blank-ink: rgba(90, 130, 170, .55); }
+body[data-material="acrylic"] .board-frame {
+  background:
+    linear-gradient(152deg, rgba(178, 220, 255, .62) 0%, rgba(150, 200, 250, .50) 42%, rgba(248, 198, 232, .46) 100%);
+  border: .16cqw solid rgba(255, 255, 255, .9);
+  backdrop-filter: blur(14px) saturate(1.35);
+  box-shadow:
+    0 2.2cqw 4.2cqw rgba(96, 140, 190, .26),
+    inset 0 .5cqw 1.4cqw rgba(255, 255, 255, .55),
+    inset 0 -1.1cqw 2.2cqw rgba(140, 185, 235, .3),
+    inset 0 0 0 .3cqw rgba(255, 255, 255, .35);
+}
+body[data-material="acrylic"] .board-frame::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(112deg,
+    rgba(255, 255, 255, .30) 0 9%, rgba(255, 255, 255, 0) 22% 58%,
+    rgba(255, 255, 255, .34) 70%, rgba(255, 255, 255, 0) 82%);
+  mix-blend-mode: screen;
+}
+body[data-material="acrylic"] .board-tag { color: #4a7ea8; background: rgba(255, 255, 255, .92); }
+body[data-material="acrylic"] .tile-look {
+  background: linear-gradient(158deg, hsl(var(--h, 205) 96% 94% / .92) 0%, hsl(var(--h, 205) 90% 82% / .86) 100%);
+  border: .06em solid rgba(255, 255, 255, .92);
+  color: hsl(var(--h, 205) 58% 32%);
+  text-shadow: 0 .06em 0 rgba(255, 255, 255, .9);
+  box-shadow:
+    inset 0 .1em .22em rgba(255, 255, 255, .95),
+    inset 0 -.14em .3em hsl(var(--h, 205) 85% 72% / .6),
+    0 .16em .34em rgba(110, 145, 195, .26);
+}
+body[data-material="acrylic"] .cell.blank {
+  background: linear-gradient(158deg, rgba(206, 234, 255, .62), rgba(226, 224, 255, .55));
+  border: .26cqw dashed rgba(255, 255, 255, .95);
+  color: var(--blank-ink);
+  box-shadow: inset 0 .2em .5em rgba(120, 160, 200, .22), 0 0 0 .1cqw rgba(255, 255, 255, .55);
+}
+body[data-material="acrylic"] .cell.filled::before { color: hsl(var(--h, 205) 70% 45%); }
+
+/* ---------- ③ 马卡龙 ---------- */
+body[data-material="macaron"] { --blank-ink: rgba(180, 150, 130, .65); }
+body[data-material="macaron"] .board-frame {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 40%),
+    linear-gradient(160deg, #fffdf7 0%, #fff5e8 55%, #ffeee0 100%);
+  border: .55cqw solid #fff8ee;
+  box-shadow:
+    0 1.8cqw 3.4cqw rgba(186, 150, 122, .24),
+    inset 0 0 0 .3cqw #fff,
+    inset 0 -1cqw 2.4cqw rgba(230, 200, 180, .35);
+}
+body[data-material="macaron"] .board-tag { color: #b98a6a; background: rgba(255, 255, 255, .95); }
+body[data-material="macaron"] .tile-look {
+  background: linear-gradient(180deg, hsl(var(--h, 20) 96% 90%) 0%, hsl(var(--h, 20) 90% 79%) 100%);
+  border: .07em solid hsl(var(--h, 20) 82% 74%);
+  color: hsl(var(--h, 20) 52% 34%);
+  box-shadow:
+    inset 0 .1em 0 rgba(255, 255, 255, .9),
+    0 .16em 0 hsl(var(--h, 20) 72% 71%),
+    0 .26em .38em rgba(180, 145, 125, .2);
+}
+body[data-material="macaron"] .cell.blank {
+  background: rgba(255, 246, 236, .8);
+  border: .26cqw dashed hsl(var(--h, 20) 70% 80%);
+  color: var(--blank-ink);
+  box-shadow: inset 0 .25em .6em rgba(200, 165, 140, .24);
+}
+body[data-material="macaron"] .cell.filled::before { color: hsl(var(--h, 20) 65% 52%); }
+
+/* ---------- ④ 星空 ---------- */
+body[data-material="starry"] { --blank-ink: rgba(180, 205, 255, .6); }
+body[data-material="starry"] .board-frame {
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, .9) 0 1px, rgba(255, 255, 255, 0) 2.4px) 0 0 / 3.6cqw 3.6cqw,
+    radial-gradient(circle at 68% 54%, rgba(190, 220, 255, .75) 0 1px, rgba(255, 255, 255, 0) 2.2px) 0 0 / 5.2cqw 5.2cqw,
+    radial-gradient(circle at 42% 82%, rgba(255, 230, 190, .7) 0 1px, rgba(255, 255, 255, 0) 2px) 0 0 / 7cqw 7cqw,
+    linear-gradient(158deg, #2a3168 0%, #1d1a3f 52%, #331f52 100%);
+  border: .28cqw solid rgba(158, 186, 255, .34);
+  box-shadow:
+    0 2cqw 4cqw rgba(24, 22, 62, .45),
+    inset 0 0 3.4cqw rgba(126, 164, 255, .3),
+    inset 0 0 0 .3cqw rgba(255, 255, 255, .07);
+}
+body[data-material="starry"] .board-tag { color: #cfd8ff; background: rgba(52, 60, 118, .78); }
+body[data-material="starry"] .tile-look {
+  background: linear-gradient(180deg, hsl(var(--h, 230) 68% 36% / .9) 0%, hsl(var(--h, 230) 74% 24% / .94) 100%);
+  border: .06em solid hsl(var(--h, 230) 86% 66% / .55);
+  color: #eff4ff;
+  text-shadow: 0 0 .34em hsl(var(--h, 230) 92% 72% / .95);
+  box-shadow:
+    inset 0 .1em .3em rgba(255, 255, 255, .22),
+    0 0 .5em hsl(var(--h, 230) 92% 68% / .38),
+    0 .16em .3em rgba(10, 8, 30, .5);
+}
+body[data-material="starry"] .cell.blank {
+  background: rgba(12, 12, 34, .55);
+  border: .26cqw dashed rgba(158, 186, 255, .45);
+  color: var(--blank-ink);
+  box-shadow: inset 0 0 .8em rgba(90, 130, 255, .35);
+}
+body[data-material="starry"] .cell.filled::before { color: #ffe9a8; text-shadow: 0 0 .5em rgba(255, 220, 130, .9); }
+
+/* ---------- 空格外的高亮描边跳色 ---------- */
+body[data-material="starry"] .cell.target::after { border-color: #ffe27a; box-shadow: 0 0 1.6cqw #ffe27a; }
+body[data-material="starry"] .cell.blank .q { color: rgba(180, 205, 255, .75); }
+body[data-material="acrylic"] .cell.blank .q { color: rgba(84, 128, 175, .78); }

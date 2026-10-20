@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>百数板乐园 · 数字小达人</title>
+<link rel="icon" type="image/png" href="assets/icon.png" />
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/materials.css" />
+<link rel="stylesheet" href="css/animations.css" />
+</head>
+<body data-material="wood" data-motion="full">
+
+<div class="bg-decor" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+  <span class="cloud c1"></span>
+  <span class="cloud c2"></span>
+  <span class="cloud c3"></span>
+</div>
+
+<div id="bootError" class="boot-error" role="alert" hidden></div>
+<div class="app">
+  <aside class="sidebar">
+    <section class="card account" aria-label="玩家账户">
+      <div class="account-profile">
+        <button class="avatar" id="avatarBtn" type="button" title="点我换头像" aria-label="更换头像">🐻</button>
+        <div class="acc-info">
+          <input class="name-input" id="nameInput" maxlength="8" value="小玩家" aria-label="昵称" />
+          <div class="acc-title" id="accTitle">数字新星</div>
+        </div>
+      </div>
+      <div class="avatar-picker" id="avatarPicker" hidden></div>
+      <div class="account-controls">
+        <div class="account-heading">
+          <label for="playerSelect">玩家账户</label>
+          <button id="deactivatePlayerBtn" class="ghost-btn account-action-btn" type="button">注销当前账户</button>
+        </div>
+        <div class="account-select"><select id="playerSelect" aria-label="切换玩家账户"></select></div>
+        <form id="createPlayerForm" class="new-player-form">
+          <input id="newPlayerName" maxlength="8" placeholder="新玩家昵称" aria-label="新玩家昵称" required />
+          <button id="createPlayerBtn" class="ghost-btn" type="submit">创建</button>
+        </form>
+        <button id="manageDeactivatedBtn" class="ghost-btn account-action-btn" type="button" aria-haspopup="dialog" aria-controls="deactivatedPlayersDialog">已注销账户 <span id="deactivatedPlayerCount">0</span></button>
+        <div class="save-row"><span id="saveStatus" role="status">正在打开本机数据库</span><button id="retrySaveBtn" class="text-btn" type="button" hidden>重试保存</button></div>
+      </div>
+    </section>
+
+    <section class="card score-card">
+      <div class="score-row">
+        <span class="score-label">积分</span>
+        <span class="score-value" id="scoreValue">0</span>
+      </div>
+      <div class="sub-stats">
+        <span>通关 <b id="statLevels">0</b>/<span id="totalLevels">220</span></span>
+        <span class="dot">·</span>
+        <span>星星 <b id="statStars">0</b>/<span id="totalStars">660</span></span>
+      </div>
+    </section>
+
+    <section class="card levels-card">
+      <div class="panel-title"><span>关卡地图</span><span class="mini">由易到难</span></div>
+      <div class="level-list" id="levelList" tabindex="0" aria-label="关卡地图，可滚动查看全部关卡"></div>
+      <div class="practice-controls">
+        <label class="practice-toggle"><input id="freeModeToggle" type="checkbox" />手动选关 / 自由练习</label>
+        <p id="modeNote">闯关模式：按顺序解锁，成绩计入积分。</p>
+        <div id="freeControls" hidden>
+          <label for="practiceLevel">选择任意关卡</label>
+          <select id="practiceLevel"></select>
+          <div class="practice-actions">
+            <button id="startPracticeBtn" class="ghost-btn" type="button">进入选关</button>
+            <button id="randomLevelBtn" class="primary-btn" type="button">随机一关</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-card">
+      <div class="panel-title settings-title">
+        <span>设置</span>
+        <div class="support-actions">
+          <button class="ghost-btn support-btn follow-btn" id="followBtn" type="button" aria-haspopup="dialog" aria-controls="supportDialog">关注</button>
+          <button class="ghost-btn support-btn donate-btn" id="donateBtn" type="button" aria-haspopup="dialog" aria-controls="supportDialog">捐赠</button>
+        </div>
+      </div>
+      <div class="setting-row col">
+        <label>棋盘材质</label>
+        <div class="material-picker" id="materialPicker"></div>
+      </div>
+      <div class="setting-row">
+        <label>音效</label>
+        <button class="switch" id="soundToggle" type="button" role="switch" aria-checked="true"><i></i><span>开</span></button>
+      </div>
+      <div class="setting-row">
+        <label>动画</label>
+        <button class="switch" id="motionToggle" type="button" role="switch" aria-checked="true"><i></i><span>完整</span></button>
+      </div>
+      <div class="setting-row">
+        <label>版本授权</label>
+        <span class="license-status" id="licenseStatus" role="status">（未激活）</span>
+      </div>
+      <div class="setting-row col">
+        <div class="license-panel">
+          <div class="license-machine">
+            <span id="licenseMachine"></span>
+            <button class="ghost-btn" id="licenseCopyMachineBtn" type="button">复制设备码</button>
+          </div>
+          <div class="license-actions">
+            <button class="primary-btn" id="licenseActivateBtn" type="button" aria-haspopup="dialog" aria-controls="licenseDialog">输入激活码</button>
+            <button class="ghost-btn" id="licenseImportBtn" type="button">导入授权文件</button>
+            <button class="ghost-btn" id="licenseExportBtn" type="button" hidden>导出授权文件</button>
+            <input type="file" id="licenseFile" accept=".hblicense,.json,application/json" hidden />
+          </div>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="stage">
+    <header class="card stage-head">
+      <div class="head-left">
+        <div class="lv-badge" id="lvBadge">第 1 关</div>
+        <div class="head-text">
+          <h1 id="lvName">认识新朋友</h1>
+          <p id="lvGoal">找到数字的家</p>
+        </div>
+      </div>
+      <div class="mascot">
+        <div class="bubble" id="mascotBubble">一起玩百数板吧！</div>
+        <div class="mascot-face" id="mascotFace">🐻</div>
+      </div>
+      <div class="head-actions">
+        <button class="ghost-btn" id="prevBtn" type="button">上一关</button>
+        <button class="ghost-btn" id="replayBtn" type="button">重玩</button>
+        <button class="ghost-btn warn" id="hintBtn" type="button">提示 -5</button>
+        <button class="primary-btn" id="nextBtn" type="button" hidden>下一关</button>
+      </div>
+    </header>
+
+    <div class="card challenge-bar">
+      <span id="modeBadge" class="mode-badge">正式闯关</span>
+      <p id="targetPrompt" aria-live="polite">请选择闪光格对应的数字。</p>
+    </div>
+    <div class="board-wrap">
+      <div class="board" id="board">
+        <div class="board-frame">
+          <div class="grid" id="grid"></div>
+        </div>
+        <div class="board-tag" id="boardTag">实木棋盘</div>
+      </div>
+    </div>
+
+    <footer class="card stage-foot">
+      <div class="progress"><i id="progressBar"></i></div>
+      <div class="progress-text" id="progressText">已填 0 / 1</div>
+    </footer>
+  </main>
+
+  <aside class="tray">
+    <div class="card tray-card">
+      <div class="panel-title"><span id="trayTitle">候选数字</span><span class="mini" id="trayCount">10 个</span></div>
+      <div class="activity-panel" id="activityPanel" hidden>
+        <p class="activity-title" id="activityTitle"></p>
+        <div class="animal-card" id="animalCard" hidden></div>
+        <p class="activity-prompt" id="activityPrompt"></p>
+        <p class="activity-note" id="activityNote"></p>
+        <div class="play-clock" id="playClock" hidden>用时 0.0 秒</div>
+      </div>
+      <section class="race-panel" id="racePanel" aria-label="飞行棋操作面板" hidden>
+        <div class="race-mode-options" role="group" aria-label="对战模式">
+          <button class="ghost-btn" id="raceAiMode" type="button" aria-pressed="true">人机对战</button>
+          <button class="ghost-btn" id="raceLocalMode" type="button" aria-pressed="false">双人对战</button>
+        </div>
+        <p class="race-mode-note" id="raceModeNote">切换对战模式会重新开始本局。</p>
+        <div class="race-scoreboard">
+          <div class="race-score race-you"><span id="racePlayerName">我 · 小兔</span><strong id="racePlayerPosition">1</strong><small>/ 100</small></div>
+          <div class="race-score race-computer"><span id="raceAiName">电脑 · 小熊</span><strong id="raceAiPosition">1</strong><small>/ 100</small></div>
+        </div>
+        <p class="race-turn" id="raceTurn">第 1 回合 · 你</p>
+        <div class="race-die" id="raceDie" role="img" aria-label="骰子等待掷出" data-value="0">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <button class="primary-btn race-roll" id="raceRoll" type="button">掷骰子</button>
+        <p class="race-legend" id="raceLegend"></p>
+        <div class="race-cards" id="raceCards" hidden>
+          <p class="race-card-status" id="raceCardStatus"></p>
+          <div class="race-hand" id="raceHand" aria-label="我的道具卡"></div>
+          <p class="race-card-help">走完骰子步数、答题前用卡。睡眠：对手下回合轮空；免疫：抵挡一次陷阱或睡眠，生效后消耗。被睡眠攻击时，也可以选择使用手中的免疫卡抵挡。</p>
+          <button class="ghost-btn race-continue" id="raceContinue" type="button" hidden>继续：落点与答题</button>
+        </div>
+        <div class="race-defense" id="raceDefense" role="group" aria-labelledby="raceDefensePrompt" hidden>
+          <p id="raceDefensePrompt" role="status"></p>
+          <div class="race-defense-actions" id="raceDefenseActions"></div>
+        </div>
+        <p class="race-event" id="raceEvent" role="status" hidden></p>
+        <div class="race-question-card">
+          <p id="raceQuestionLabel">每个落点一道题</p>
+          <p class="race-question" id="raceQuestion">落地后出现算式</p>
+          <div class="race-answers" id="raceAnswers" aria-label="选择算式答案"></div>
+        </div>
+        <p class="race-feedback" id="raceFeedback" role="status"></p>
+        <p class="race-rule" id="raceRule">你答对：你前进 2 步；答错：你后退 1 步。</p>
+      </section>
+      <div class="tray-grid" id="trayGrid"></div>
+      <div class="tray-tip" id="trayTip">点一点数字，送它回家吧！</div>
+    </div>
+  </aside>
+</div>
+
+<dialog class="support-dialog" id="supportDialog" aria-labelledby="supportTitle" aria-describedby="supportNote">
+  <div class="support-header">
+    <h2 id="supportTitle">关注</h2>
+    <button class="ghost-btn" id="closeSupportBtn" type="button" autofocus>关闭</button>
+  </div>
+  <img id="supportImage" alt="" hidden />
+  <p class="support-error" id="supportError" role="alert" hidden>图片未能加载，请确认本地图片文件已准备好。</p>
+  <p class="support-note" id="supportNote"></p>
+</dialog>
+
+<dialog class="account-dialog license-dialog" id="licenseDialog" aria-labelledby="licenseTitle" aria-describedby="licenseNote">
+  <h2 id="licenseTitle">激活完整版</h2>
+  <p class="account-dialog-note" id="licenseNote">前 20 关和每一章的第一关可免费任玩，其余关卡需要激活码（定价￥66）。绑定码仅本机可用：激活前先点「复制设备码」发给关注的微信换码；盲发码不限设备。重装后可用授权文件恢复。</p>
+  <label class="license-label" for="licenseCode">激活码</label>
+  <textarea id="licenseCode" rows="4" spellcheck="false" autocomplete="off"></textarea>
+  <p class="license-error" id="licenseError" role="alert" hidden></p>
+  <div class="account-confirm-actions">
+    <button class="ghost-btn" id="licenseCancelBtn" type="button">取消</button>
+    <button class="primary-btn" id="licenseConfirmBtn" type="button">激活</button>
+  </div>
+</dialog>
+
+<dialog class="account-dialog" id="deactivatedPlayersDialog" aria-labelledby="deactivatedPlayersTitle">
+  <div class="account-dialog-header">
+    <h2 id="deactivatedPlayersTitle">已注销账户</h2>
+    <button class="ghost-btn" id="closeDeactivatedBtn" type="button">关闭</button>
+  </div>
+  <p class="account-dialog-note">这些账户不会出现在玩家下拉列表中。永久删除后，积分、关卡和设置将无法恢复。</p>
+  <div class="deactivated-player-list" id="deactivatedPlayerList"></div>
+</dialog>
+
+<dialog class="account-dialog confirm-account-dialog" id="accountConfirmDialog" aria-labelledby="accountConfirmTitle" aria-describedby="accountConfirmText">
+  <h2 id="accountConfirmTitle">确认操作</h2>
+  <p id="accountConfirmText"></p>
+  <div class="account-confirm-actions">
+    <button class="ghost-btn" id="accountConfirmCancel" type="button">取消</button>
+    <button class="primary-btn" id="accountConfirmBtn" type="button">确认</button>
+  </div>
+</dialog>
+
+<div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="overlay-card">
+    <div class="ov-stars" id="ovStars"></div>
+    <h2 id="ovTitle">太棒啦！</h2>
+    <p id="ovText">你完成了第 1 关</p>
+    <div class="ov-score" id="ovScore">+30 积分</div>
+    <div class="ov-actions">
+      <button class="ghost-btn" id="ovReplay" type="button">再玩一次</button>
+      <button class="ghost-btn" id="ovLicense" type="button" hidden>激活完整版</button>
+      <button class="primary-btn" id="ovNext" type="button">下一关</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/license.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/board.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

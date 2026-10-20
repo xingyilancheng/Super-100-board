@@ -1,0 +1,90 @@
+{
+  "name": "hundred-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "百数板乐园 · 数字小达人 —— 儿童百数板闯关游戏",
+  "author": "百数板乐园",
+  "license": "MIT",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "web": "node tools/serve.mjs",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build:issuer": "node tools/build-issuer.cjs",
+    "test": "node tools/test-levels.cjs && node tools/test-game.cjs",
+    "test:store": "electron tools/test-store.cjs"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "postject": "^1.0.0-alpha.6"
+  },
+  "build": {
+    "appId": "com.hundredboard.kids",
+    "productName": "百数板乐园",
+    "copyright": "Copyright © 2026 百数板乐园",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "index.html",
+      "css/**/*",
+      "js/**/*",
+      "assets/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.cjs"
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "百数板乐园",
+      "artifactName": "${productName}-安装包-${version}.${ext}"
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "category": "public.app-category.education",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Education",
+      "target": [
+        "AppImage"
+      ]
+    }
+  }
+}

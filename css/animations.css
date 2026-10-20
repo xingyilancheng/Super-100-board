@@ -1,0 +1,144 @@
+/* ===========================================================
+   动画：飞入尾迹 / 错误摆动 / 落点特效 / 庆祝
+   =========================================================== */
+
+/* ---------- 飞行方块与尾迹 ---------- */
+.fly-tile, .fly-trail {
+  position: absolute;
+  left: 0; top: 0;
+  will-change: transform;
+  pointer-events: none;
+}
+.fly-tile { z-index: 3; }
+.fly-trail { z-index: 2; filter: blur(.06em) saturate(1.5); }
+.fly-trail.t1 { opacity: .55; }
+.fly-trail.t2 { opacity: .3; }
+.fly-trail.t3 { opacity: .16; }
+
+.spark {
+  position: absolute; left: 0; top: 0; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 26%, hsl(var(--h, 320) 100% 72%) 46%, rgba(255, 255, 255, 0) 72%);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+.spark.star {
+  border-radius: 20%;
+  background: none; color: #fff;
+  text-shadow: 0 0 .5em hsl(var(--h, 320) 100% 70%);
+  display: grid; place-items: center;
+  font-family: var(--num-font);
+}
+.ripple {
+  position: absolute; left: 0; top: 0; border-radius: 50%;
+  border: 3px solid var(--accent); pointer-events: none;
+  will-change: transform, opacity;
+}
+.float-text {
+  position: absolute; left: 0; top: 0; pointer-events: none;
+  font-family: var(--num-font); font-weight: 700; font-size: 22px;
+  color: var(--ok); text-shadow: 0 2px 0 #fff, 0 4px 10px rgba(0, 0, 0, .18);
+  will-change: transform, opacity;
+}
+.float-text.bad { color: var(--bad); }
+.float-text.star-txt { color: #ffb01f; }
+
+/* ---------- 错误：左右摆动 ---------- */
+.tray-tile.wrong-shake, .cell.wrong-shake { animation: shakeX .62s cubic-bezier(.36, .07, .19, .97) both; }
+.cell.hint { animation: hintGlow 1s ease-in-out 2; }
+.tray-tile.wrong-tint::after, .cell.wrong-tint::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: rgba(255, 90, 90, .55);
+  animation: wrongTint .6s ease forwards;
+}
+@keyframes shakeX {
+  0%   { transform: translateX(0) rotate(0deg); }
+  12%  { transform: translateX(-9px) rotate(-7deg); }
+  28%  { transform: translateX(9px) rotate(7deg); }
+  44%  { transform: translateX(-7px) rotate(-5deg); }
+  60%  { transform: translateX(6px) rotate(4deg); }
+  76%  { transform: translateX(-3px) rotate(-2deg); }
+  90%  { transform: translateX(2px) rotate(1deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+@keyframes wrongTint { 0% { opacity: .85; } 70% { opacity: .35; } 100% { opacity: 0; } }
+
+/* ---------- 动作 / 反馈 ---------- */
+@keyframes popIn {
+  0% { transform: scale(.55) rotate(-6deg); opacity: .2; }
+  62% { transform: scale(1.08) rotate(1deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes landSquash {
+  0% { transform: scale(.72); }
+  45% { transform: scale(1.14); }
+  72% { transform: scale(.96); }
+  100% { transform: scale(1); }
+}
+@keyframes ringPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .45; transform: scale(1.06); }
+}
+@keyframes qFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12%); }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+@keyframes usedOut {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(.35) rotate(18deg); opacity: 0; }
+}
+@keyframes hintGlow {
+  0%, 100% { filter: none; transform: translateY(0) scale(1); }
+  50% { filter: drop-shadow(0 0 14px var(--accent2)) brightness(1.12); transform: translateY(-4px) scale(1.05); }
+}
+@keyframes bump {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.22) rotate(-3deg); }
+  100% { transform: scale(1); }
+}
+@keyframes bubblePop {
+  0% { transform: scale(.8); }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes hop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-9px) scale(1.08) rotate(-6deg); }
+}
+@keyframes wobbleSmall {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-9deg); }
+  65% { transform: rotate(7deg); }
+}
+@keyframes hueSlide { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes drift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(26px) translateY(-10px); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cardIn {
+  0% { transform: scale(.82) translateY(14px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes starIn {
+  0% { transform: scale(0) rotate(-40deg); }
+  70% { transform: scale(1.3) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: .9; }
+}
+
+/* ---------- 精简动画模式 ---------- */
+body[data-motion="lite"] .bg-decor .cloud,
+body[data-motion="lite"] .progress i,
+body[data-motion="lite"] .cell.blank .q { animation: none !important; }
+body[data-motion="lite"] .cell.blank .q { opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-decor .cloud { animation: none; }
+}
